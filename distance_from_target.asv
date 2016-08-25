@@ -1,0 +1,24 @@
+function [distance_array_mm] = distance_from_target(chunk, goalx, goaly, respx, respy)
+
+%Creating a continuous array of distances
+
+%Convert from screen units to mm 
+[goalx_mm, goaly_mm] = formant2mm(goalx, goaly);
+[respx_mm, respy_mm] = formant2mm(respx, respy);
+
+%Distance between goal and response
+difx = goalx_mm - respx_mm;
+dify = goaly_mm - respy_mm;
+dist =  sqrt(difx.^2 + dify.^2);
+
+%Chunking it according to the chunk input
+input_length = length(respx);
+chunk_count = chunk:chunk:input_length;
+k = 1;
+temp_dist_sum = 0;
+
+for n = length(chunk_count)
+    distance_array_mm(n) = mean(dist(k:chunk_count(n)));
+    k = k + chunk;
+end
+
